@@ -53,7 +53,8 @@ export function TodoEdit() {
       })
   }
 
-  const { txt, importance, isDone } = todoToEdit
+  const { txt, importance, isDone, color } = todoToEdit
+  const colors = ['red', 'blue', 'green', 'orange', 'purple', 'gray']
 
   return (
     <section className='todo-edit'>
@@ -64,8 +65,17 @@ export function TodoEdit() {
         <label htmlFor='importance'>Importance:</label>
         <input onChange={handleChange} value={importance} type='number' name='importance' id='importance' />
 
-        <label htmlFor='isDone'>isDone:</label>
+        <label htmlFor='isDone'>Is Done:</label>
         <input onChange={handleChange} checked={isDone} type='checkbox' name='isDone' id='isDone' />
+
+        <label htmlFor='color'>Color:</label>
+        <select onChange={handleChange} value={color} name='color' id='color'>
+          {colors.map((clr) => (
+            <option key={clr} value={clr}>
+              {clr}
+            </option>
+          ))}
+        </select>
 
         <button>Save</button>
       </form>

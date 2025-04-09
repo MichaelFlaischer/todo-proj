@@ -20,7 +20,6 @@ const initialState = {
     importance: 0,
   },
   loggedInUser: userService.getLoggedinUser(),
-  selectedTodo: null,
 }
 
 function appReducer(state = initialState, cmd = {}) {
@@ -30,14 +29,12 @@ function appReducer(state = initialState, cmd = {}) {
       return {
         ...state,
         todo: cmd.todo,
-        countTodos: cmd.todo.length,
       }
     case REMOVE_TODO: {
       const updatedTodos = state.todo.filter((todo) => todo._id !== cmd.todoId)
       return {
         ...state,
         todo: updatedTodos,
-        countTodos: updatedTodos.length,
       }
     }
     case ADD_TODO: {
@@ -45,7 +42,6 @@ function appReducer(state = initialState, cmd = {}) {
       return {
         ...state,
         todo: updatedTodos,
-        countTodos: updatedTodos.length,
       }
     }
     case UPDATE_TODO:
