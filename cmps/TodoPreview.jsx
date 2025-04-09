@@ -1,18 +1,8 @@
 export function TodoPreview({ todo, onToggleTodo }) {
   return (
     <article className='todo-preview'>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-        <span
-          title={`Color: ${todo.color}`}
-          style={{
-            backgroundColor: todo.color,
-            width: '1em',
-            height: '1em',
-            borderRadius: '50%',
-            display: 'inline-block',
-            border: '1px solid #ccc',
-          }}
-        ></span>
+      <div className='header-row'>
+        <span className='color-indicator' title={`Color: ${todo.color}`} style={{ backgroundColor: todo.color }}></span>
 
         <h2 className={todo.isDone ? 'done' : ''} onClick={onToggleTodo}>
           Todo: {todo.txt}
