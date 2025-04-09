@@ -6,7 +6,7 @@ import { TodoFilter } from '../cmps/TodoFilter.jsx'
 import { TodoList } from '../cmps/TodoList.jsx'
 import { DataTable } from '../cmps/data-table/DataTable.jsx'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
-import { loadTodos, removeTodo, saveTodo } from '../store/actions/todo.actions.js'
+import { loadTodos, saveTodo } from '../store/actions/todo.actions.js'
 
 export function TodoIndex() {
   const todos = useSelector((storeState) => storeState.todo)
@@ -22,15 +22,6 @@ export function TodoIndex() {
     })
   }, [filterBy])
 
-  function onRemoveTodo(todoId) {
-    removeTodo(todoId)
-      .then(() => showSuccessMsg('Todo removed'))
-      .catch((err) => {
-        console.error('err:', err)
-        showErrorMsg('Cannot remove todo ' + todoId)
-      })
-  }
-
   function onToggleTodo(todo) {
     const todoToSave = { ...todo, isDone: !todo.isDone }
     saveTodo(todoToSave)
@@ -42,8 +33,7 @@ export function TodoIndex() {
   }
 
   if (!todos) return <div>Loading...</div>
-  if (!todos.length) return <h2>No todos to show...</h2>
-  else
+  if (!todos.length)
     return (
       <section className='todo-index'>
         <TodoFilter />
@@ -52,13 +42,25 @@ export function TodoIndex() {
             Add Todo
           </Link>
         </div>
-        <h2>Todos List</h2>
-        <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} />
-        <hr />
-        <h2>Todos Table</h2>
-        <div style={{ width: '60%', margin: 'auto' }}>
-          <DataTable todos={todos} onRemoveTodo={onRemoveTodo} />
-        </div>
+        <h2>No todos to show...</h2>
       </section>
     )
+
+  return (
+    <section className='todo-index'>
+      <TodoFilter />
+      <div>
+        <Link to='/todo/edit' className='btn'>
+          Add Todo
+        </Link>
+      </div>
+      <h2>Todos List</h2>
+      <TodoList todos={todos} onToggleTodo={onToggleTodo} />
+      <hr />
+      <h2>Todos Table</h2>
+      <div style={{ width: '60%', margin: 'auto' }}>
+        <DataTable todos={todos} />
+      </div>
+    </section>
+  )
 }
