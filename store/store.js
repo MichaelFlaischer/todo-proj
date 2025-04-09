@@ -74,7 +74,12 @@ function appReducer(state = initialState, cmd = {}) {
       if (state.loggedInUser) {
         const activityText = isGainedPoint ? `Completed todo: "${cmd.todo.txt}"` : `Updated todo: "${cmd.todo.txt}"`
         userService.addActivity(activityText)
-        if (isGainedPoint) userService.updateBalance(10)
+
+        if (isGainedPoint) {
+          userService.updateBalance(10).then((newBalance) => {
+            store.dispatch({ type: SET_USER_BALANCE, balance: newBalance })
+          })
+        }
       }
 
       return {
