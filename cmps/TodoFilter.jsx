@@ -1,55 +1,53 @@
 const { useState, useEffect } = React
+const { useSelector } = ReactRedux
+import { setFilterBy } from '../store/actions/todo.actions.js'
 
-export function TodoFilter({ filterBy, onSetFilterBy }) {
+export function TodoFilter() {
+  const filterBy = useSelector((storeState) => storeState.filterBy)
 
-    const [filterByToEdit, setFilterByToEdit] = useState({...filterBy})
+  const [filterByToEdit, setFilterByToEdit] = useState({ ...filterBy })
 
-    useEffect(() => {
-        // Notify parent
-        onSetFilterBy(filterByToEdit)
-    }, [filterByToEdit])
+  useEffect(() => {
+    setFilterBy(filterByToEdit)
+  }, [filterByToEdit])
 
-    function handleChange({ target }) {
-        const field = target.name
-        let value = target.value
+  function handleChange({ target }) {
+    const field = target.name
+    let value = target.value
 
-        switch (target.type) {
-            case 'number':
-            case 'range':
-                value = +value || ''
-                break
-
-            case 'checkbox':
-                value = target.checked
-                break
-
-            default: break
-        }
-
-        setFilterByToEdit(prevFilter => ({ ...prevFilter, [field]: value }))
+    switch (target.type) {
+      case 'number':
+      case 'range':
+        value = +value || ''
+        break
+      case 'checkbox':
+        value = target.checked
+        break
+      default:
+        break
     }
 
-    // Optional support for LAZY Filtering with a button
-    function onSubmitFilter(ev) {
-        ev.preventDefault()
-        onSetFilterBy(filterByToEdit)
-    }
+    setFilterByToEdit((prevFilter) => ({ ...prevFilter, [field]: value }))
+  }
 
-    const { txt, importance } = filterByToEdit
-    return (
-        <section className="todo-filter">
-            <h2>Filter Todos</h2>
-            <form onSubmit={onSubmitFilter}>
-                <input value={txt} onChange={handleChange}
-                    type="search" placeholder="By Txt" id="txt" name="txt"
-                />
-                <label htmlFor="importance">Importance: </label>
-                <input value={importance} onChange={handleChange}
-                    type="number" placeholder="By Importance" id="importance" name="importance"
-                />
+  // Optional: for lazy filtering with a button (currently unused)
+  function onSubmitFilter(ev) {
+    ev.preventDefault()
+    setFilterBy(filterByToEdit)
+  }
 
-                <button hidden>Set Filter</button>
-            </form>
-        </section>
-    )
+  const { txt, importance } = filterByToEdit
+
+  return (
+    <section className='todo-filter'>
+      <h2>Filter Todos</h2>
+      <form onSubmit={onSubmitFilter}>
+        <input value={txt} onChange={handleChange} type='search' placeholder='By Txt' id='txt' name='txt' />
+        <label htmlFor='importance'>Importance: </label>
+        <input value={importance} onChange={handleChange} type='number' placeholder='By Importance' id='importance' name='importance' />
+
+        <button hidden>Set Filter</button>
+      </form>
+    </section>
+  )
 }
