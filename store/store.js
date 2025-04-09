@@ -27,7 +27,7 @@ const initialState = {
 
 function appReducer(state = initialState, cmd = {}) {
   switch (cmd.type) {
-    //* Todo
+    //* Todos
     case SET_TODOS: {
       const updatedTodos = cmd.todo
       const shouldUpdateAllTodos = !state.allTodos.length
@@ -41,6 +41,9 @@ function appReducer(state = initialState, cmd = {}) {
     case REMOVE_TODO: {
       const updatedTodos = state.todo.filter((todo) => todo._id !== cmd.todoId)
       const updatedAllTodos = state.allTodos.filter((todo) => todo._id !== cmd.todoId)
+
+      if (state.loggedInUser) userService.addActivity(`Removed a todo (id: ${cmd.todoId})`)
+
       return {
         ...state,
         todo: updatedTodos,
@@ -51,6 +54,9 @@ function appReducer(state = initialState, cmd = {}) {
     case ADD_TODO: {
       const updatedTodos = [...state.todo, cmd.todo]
       const updatedAllTodos = [...state.allTodos, cmd.todo]
+
+      if (state.loggedInUser) userService.addActivity(`Added a new todo: "${cmd.todo.txt}"`)
+
       return {
         ...state,
         todo: updatedTodos,
@@ -65,19 +71,16 @@ function appReducer(state = initialState, cmd = {}) {
       const updatedTodos = state.todo.map((todo) => (todo._id === cmd.todo._id ? cmd.todo : todo))
       const updatedAllTodos = state.allTodos.map((todo) => (todo._id === cmd.todo._id ? cmd.todo : todo))
 
-      let updatedUser = state.loggedInUser
-      if (isGainedPoint && updatedUser) {
-        updatedUser = {
-          ...updatedUser,
-          balance: (updatedUser.balance || 0) + 10,
-        }
+      if (state.loggedInUser) {
+        const activityText = isGainedPoint ? `Completed todo: "${cmd.todo.txt}"` : `Updated todo: "${cmd.todo.txt}"`
+        userService.addActivity(activityText)
+        if (isGainedPoint) userService.updateBalance(10)
       }
 
       return {
         ...state,
         todo: updatedTodos,
         allTodos: updatedAllTodos,
-        loggedInUser: updatedUser,
       }
     }
 
