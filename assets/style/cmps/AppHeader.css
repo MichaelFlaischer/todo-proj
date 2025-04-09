@@ -1,34 +1,49 @@
 .app-header {
-    background-color: var(--clr1);
-    color: var(--clr2bg-light);
-    
+  background-color: var(--clr1);
+  color: var(--clr2bg-light);
 }
 
 .header-container {
-    display: flex;
-    align-items: center;
-
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
 }
 
 .header-container h1 {
-    flex-grow: 1;
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 1em;
+}
+
+.todo-progress {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: var(--clr2bg-light);
 }
 
 .app-nav {
-    display: flex;
-    gap: 15px;
+  display: flex;
+  gap: 15px;
+  margin-left: auto;
+  margin-right: 1em;
 }
-
 
 a.active {
-    color: rgb(241, 212, 241);
-    font-weight: 600;
-    text-decoration: underline;
+  color: rgb(241, 212, 241);
+  font-weight: 600;
+  text-decoration: underline;
 }
 
-
 @media (max-width: 720px) {
-    .app-header {
-        color: var(--clr2bg-light);
-    }
+  .app-header {
+    color: var(--clr2bg-light);
+  }
+
+  .todo-progress {
+    font-size: 0.9em;
+  }
 }
