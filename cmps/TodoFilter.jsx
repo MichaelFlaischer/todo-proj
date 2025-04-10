@@ -8,7 +8,11 @@ export function TodoFilter() {
   const [filterByToEdit, setFilterByToEdit] = useState({ ...filterBy })
 
   useEffect(() => {
-    setFilterBy(filterByToEdit)
+    const timeoutId = setTimeout(() => {
+      setFilterBy(filterByToEdit)
+    }, 1000)
+
+    return () => clearTimeout(timeoutId)
   }, [filterByToEdit])
 
   function handleChange({ target }) {
@@ -30,17 +34,12 @@ export function TodoFilter() {
     setFilterByToEdit((prevFilter) => ({ ...prevFilter, [field]: value }))
   }
 
-  function onSubmitFilter(ev) {
-    ev.preventDefault()
-    setFilterBy(filterByToEdit)
-  }
-
   const { txt, importance, status = 'all' } = filterByToEdit
 
   return (
     <section className='todo-filter'>
       <h2>Filter Todos</h2>
-      <form onSubmit={onSubmitFilter}>
+      <form onSubmit={(ev) => ev.preventDefault()}>
         <input value={txt} onChange={handleChange} type='search' placeholder='By Txt' id='txt' name='txt' />
 
         <label htmlFor='importance'>Importance:</label>
@@ -52,8 +51,6 @@ export function TodoFilter() {
           <option value='active'>Active</option>
           <option value='done'>Done</option>
         </select>
-
-        <button hidden>Set Filter</button>
       </form>
     </section>
   )
