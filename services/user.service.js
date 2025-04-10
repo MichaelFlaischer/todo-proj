@@ -10,6 +10,7 @@ export const userService = {
   getEmptyCredentials,
   addActivity,
   updateBalance,
+  updateUser,
 }
 
 const STORAGE_KEY_LOGGEDIN = 'user'
@@ -29,6 +30,8 @@ function login({ username, password }) {
     if (user) {
       if (user.balance === undefined) user.balance = 0
       if (!user.activities) user.activities = []
+      if (!user.color) user.color = '#ffffff'
+      if (!user.bgColor) user.bgColor = '#000000'
       return _setLoggedinUser(user)
     } else {
       return Promise.reject('Invalid login')
@@ -36,13 +39,15 @@ function login({ username, password }) {
   })
 }
 
-function signup({ username, password, fullname }) {
+function signup({ username, password, fullname, color = '#ffffff', bgColor = '#000000' }) {
   const user = {
     username,
     password,
     fullname,
     balance: 0,
     activities: [],
+    color,
+    bgColor,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   }
@@ -63,8 +68,11 @@ function _setLoggedinUser(user) {
   const userToSave = {
     _id: user._id,
     fullname: user.fullname,
+    username: user.username,
     balance: user.balance || 0,
     activities: user.activities || [],
+    color: user.color || '#ffffff',
+    bgColor: user.bgColor || '#000000',
   }
   sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
   return userToSave
@@ -109,15 +117,8 @@ function updateBalance(diff) {
     .then(_setLoggedinUser)
     .then((user) => user.balance)
 }
-// signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
-// login({username: 'muki', password: 'muki1'})
 
-// Data Model:
-// const user = {
-//     _id: "KAtTl",
-//     username: "muki",
-//     password: "muki1",
-//     fullname: "Muki Ja",
-//     createdAt: 1711490430252,
-//     updatedAt: 1711490430999
-// }
+function updateUser(updatedUser) {
+  updatedUser.updatedAt = Date.now()
+  return storageService.put(STORAGE_KEY, updatedUser).then(_setLoggedinUser)
+}

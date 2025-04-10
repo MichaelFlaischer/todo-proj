@@ -5,7 +5,11 @@ export function login(credentials) {
   return userService
     .login(credentials)
     .then((user) => {
-      store.dispatch({ type: SET_USER, user })
+      return userService.getById(user._id)
+    })
+    .then((updatedUser) => {
+      store.dispatch({ type: SET_USER, user: updatedUser })
+      return updatedUser
     })
     .catch((err) => {
       console.log('user actions -> Cannot login', err)
@@ -17,10 +21,27 @@ export function signup(credentials) {
   return userService
     .signup(credentials)
     .then((user) => {
-      store.dispatch({ type: SET_USER, user })
+      return userService.getById(user._id)
+    })
+    .then((updatedUser) => {
+      store.dispatch({ type: SET_USER, user: updatedUser })
+      return updatedUser
     })
     .catch((err) => {
       console.log('user actions -> Cannot signup', err)
+      throw err
+    })
+}
+
+export function updateUser(updatedFields) {
+  return userService
+    .updateUser(updatedFields)
+    .then((updatedUser) => {
+      store.dispatch({ type: SET_USER, user: updatedUser })
+      return updatedUser
+    })
+    .catch((err) => {
+      console.log('user actions -> Cannot update user', err)
       throw err
     })
 }

@@ -6,7 +6,11 @@ import { login, signup } from '../store/actions/user.actions.js'
 
 export function LoginSignup() {
   const [isSignup, setIsSignUp] = useState(false)
-  const [credentials, setCredentials] = useState(userService.getEmptyCredentials())
+  const [credentials, setCredentials] = useState({
+    ...userService.getEmptyCredentials(),
+    color: '#ffffff',
+    bgColor: '#000000',
+  })
 
   function handleChange({ target }) {
     const { name: field, value } = target
@@ -35,7 +39,19 @@ export function LoginSignup() {
       <form className='login-form' onSubmit={handleSubmit}>
         <input type='text' name='username' value={credentials.username} placeholder='Username' onChange={handleChange} required autoFocus />
         <input type='password' name='password' value={credentials.password} placeholder='Password' onChange={handleChange} required autoComplete='off' />
-        {isSignup && <input type='text' name='fullname' value={credentials.fullname} placeholder='Full name' onChange={handleChange} required />}
+        {isSignup && (
+          <React.Fragment>
+            <input type='text' name='fullname' value={credentials.fullname} placeholder='Full name' onChange={handleChange} required />
+            <label>
+              Text Color:
+              <input type='color' name='color' value={credentials.color} onChange={handleChange} />
+            </label>
+            <label>
+              Background Color:
+              <input type='color' name='bgColor' value={credentials.bgColor} onChange={handleChange} />
+            </label>
+          </React.Fragment>
+        )}
         <button>{isSignup ? 'Signup' : 'Login'}</button>
       </form>
 
