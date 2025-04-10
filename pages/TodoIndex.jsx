@@ -1,4 +1,4 @@
-const { useEffect } = React
+const { useEffect, useState } = React
 const { useSelector } = ReactRedux
 const { Link, useSearchParams } = ReactRouterDOM
 
@@ -13,6 +13,7 @@ export function TodoIndex() {
   const filterBy = useSelector((storeState) => storeState.filterBy)
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const [isTableView, setIsTableView] = useState(false)
 
   useEffect(() => {
     setSearchParams(filterBy)
@@ -33,34 +34,38 @@ export function TodoIndex() {
   }
 
   if (!todos) return <div>Loading...</div>
-  if (!todos.length)
-    return (
-      <section className='todo-index'>
-        <TodoFilter />
-        <div>
-          <Link to='/todo/edit' className='btn'>
-            Add Todo
-          </Link>
-        </div>
-        <h2>No todos to show...</h2>
-      </section>
-    )
 
   return (
     <section className='todo-index'>
       <TodoFilter />
-      <div>
+      <div className='todo-actions'>
         <Link to='/todo/edit' className='btn'>
           Add Todo
         </Link>
+        <button onClick={() => setIsTableView((prev) => !prev)} className='btn'>
+          {isTableView ? 'Show List View' : 'Show Table View'}
+        </button>
       </div>
-      <h2>Todos List</h2>
-      <TodoList todos={todos} onToggleTodo={onToggleTodo} />
-      <hr />
-      <h2>Todos Table</h2>
-      <div style={{ width: '60%', margin: 'auto' }}>
-        <DataTable todos={todos} />
-      </div>
+
+      {todos.length === 0 ? (
+        <h2>No todos to show...</h2>
+      ) : (
+        <React.Fragment>
+          {isTableView ? (
+            <React.Fragment>
+              <h2>Todos Table</h2>
+              <div style={{ width: '60%', margin: 'auto' }}>
+                <DataTable todos={todos} />
+              </div>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <h2>Todos List</h2>
+              <TodoList todos={todos} onToggleTodo={onToggleTodo} />
+            </React.Fragment>
+          )}
+        </React.Fragment>
+      )}
     </section>
   )
 }
